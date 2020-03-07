@@ -23,18 +23,27 @@ public class PlayerController : MonoBehaviour
     {
         inputV = Input.GetAxis("Vertical");
         inputH = Input.GetAxis("Horizontal");
-        if (inputV != 0 || inputH != 0 || anim.GetFloat("velx") != 0) 
+        if (inputV > 0 || inputH != 0) 
         {
             anim.SetBool("isMoving", true);
             anim.speed = animationSpeed;
             anim.SetFloat("vely", Mathf.Abs(inputV));
-        }else
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                anim.SetFloat("vely", -0.03f);
+            }
+        }
+        else
         {
             anim.SetBool("isMoving", false);
             anim.SetFloat("vely", 0);
         }
-        if (anim.GetFloat("velx") == 0)
-            StartCoroutine(JumpCO());
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            anim.SetBool("isMoving", true);
+            anim.speed = animationSpeed;
+            anim.SetFloat("vely", -0.03f);
+        }
 
     }
 
