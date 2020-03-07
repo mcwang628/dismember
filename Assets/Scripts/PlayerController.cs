@@ -8,14 +8,16 @@ public class PlayerController : MonoBehaviour
     private Animator anim;
     public float rootMovementSpeed = 1f;
     public float animationSpeed = 1f;
-    public float rootTurnSpeed = 1f;
+    //public float rootTurnSpeed = 1f;
     private float inputV;
     private float inputH;
-
+    private bool hasArm;
+    public GameObject leftArm;
 
     void Start()
     {
         anim = GetComponent<Animator>();
+        hasArm = true;
     }
 
     // Update is called once per frame
@@ -23,26 +25,25 @@ public class PlayerController : MonoBehaviour
     {
         inputV = Input.GetAxis("Vertical");
         inputH = Input.GetAxis("Horizontal");
-        if (inputV > 0 || inputH != 0) 
+        if (inputV != 0 || inputH != 0) 
         {
             anim.SetBool("isMoving", true);
             anim.speed = animationSpeed;
-            anim.SetFloat("vely", Mathf.Abs(inputV));
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                anim.SetFloat("vely", -0.03f);
-            }
+            anim.SetFloat("vely", Mathf.Sqrt(inputH * inputH + inputV * inputV));
+
         }
         else
         {
             anim.SetBool("isMoving", false);
             anim.SetFloat("vely", 0);
         }
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.R) && !anim.GetBool("Detaching") && !anim.GetBool("Attaching"))
         {
-            anim.SetBool("isMoving", true);
-            anim.speed = animationSpeed;
-            anim.SetFloat("vely", -0.03f);
+            StartCoroutine(DetachCO());
+        }
+        if (Input.GetMouseButtonDown(0))
+        {
+            StartCoroutine(AttackCO());
         }
 
     }
@@ -51,14 +52,10 @@ public class PlayerController : MonoBehaviour
     {
 
         Vector3 newRootPosition;
-        Quaternion newRootRotation;
 
         newRootPosition = anim.rootPosition;
 
-        newRootRotation = anim.rootRotation;
-
         this.transform.position = Vector3.LerpUnclamped(this.transform.position, newRootPosition, rootMovementSpeed);
-        this.transform.rotation = Quaternion.LerpUnclamped(this.transform.rotation, newRootRotation, rootTurnSpeed);
 
     }
 
@@ -72,5 +69,40 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(5);
 
         anim.SetFloat("velx", 0);
+    }
+
+    IEnumerator DetachCO()
+    {
+        if (hasArm)
+        {
+            anim.SetBool("Detaching", true);
+            yield return new WaitForSeconds(1.24f);
+            anim.SetBool("Detaching", false);
+        }
+        else
+        {
+            anim.SetBool("Attaching", true);
+            yield return new WaitForSeconds(1.24f);
+            anim.SetBool("Attaching", false);
+        }
+        hasArm = !hasArm;
+    }
+
+    IEnumerator AttackCO()
+    {
+        anim.SetBool("Attacking", true);
+        yield return new WaitForSeconds(0.25f);
+        anim.SetBool("Attacking", false);
+    }
+
+    void ArmAppearOrDisappear()
+    {
+        if (hasArm)
+        {
+            leftArm.transform.localScale = new Vector3(0, 0, 0);
+        }else
+        {
+            leftArm.transform.localScale = new Vector3(1, 1, 1);
+        }
     }
 }
