@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Pickup
   - parts
+  - SF_Door
+  - bosses
+  - weapon
   layers:
   - Default
   - TransparentFX
