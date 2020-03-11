@@ -4,23 +4,32 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    private Animator anim;
     public float rootMovementSpeed = 1f;
     public float animationSpeed = 1f;
     //public float rootTurnSpeed = 1f;
+    public GameObject leftArm;
+    public GameObject hands;
+    public AudioManager audioManager;
+    public BGMManager BGMManager;
+
+    [SerializeField]
+    public AudioClip[] walkSteps;
+    [SerializeField]
+    public AudioClip[] runSteps;
+
+    private Animator anim;
     private float inputV;
     private float inputH;
     private bool hasArm;
-    public GameObject leftArm;
-    public GameObject hands;
-    SphereCollider weaponCollider;
+    private SphereCollider weaponCollider;
+    private AudioSource audioSource;
 
     void Start()
     {
         anim = GetComponent<Animator>();
         hasArm = true;
         weaponCollider = hands.GetComponent<SphereCollider>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -58,21 +67,21 @@ public class PlayerController : MonoBehaviour
 
         newRootPosition = anim.rootPosition;
 
-        this.transform.position = Vector3.LerpUnclamped(this.transform.position, newRootPosition, rootMovementSpeed);
+        transform.position = Vector3.LerpUnclamped(transform.position, newRootPosition, rootMovementSpeed);
 
     }
 
-    IEnumerator JumpCO()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            anim.SetFloat("velx", 1.1f);
-        }
+    //IEnumerator JumpCO()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Space))
+    //    {
+    //        anim.SetFloat("velx", 1.1f);
+    //    }
 
-        yield return new WaitForSeconds(5);
+    //    yield return new WaitForSeconds(5);
 
-        anim.SetFloat("velx", 0);
-    }
+    //    anim.SetFloat("velx", 0);
+    //}
 
     IEnumerator DetachCO()
     {
@@ -112,9 +121,25 @@ public class PlayerController : MonoBehaviour
     IEnumerator Attack()
     {
         weaponCollider.enabled = true;
-        yield return new WaitForSeconds(0.3f);
-        weaponCollider.enabled =false;
+        yield return new WaitForSeconds(0.15f);
+        weaponCollider.enabled = false;
     }
 
+    void WalkStep()
+    {
+        AudioClip clip = GetRandomSoundFromList(walkSteps);
+        audioSource.PlayOneShot(clip);
+    }
+
+    void RunStep()
+    {
+        AudioClip clip = GetRandomSoundFromList(runSteps);
+        audioSource.PlayOneShot(clip);
+    }
+
+    AudioClip GetRandomSoundFromList(AudioClip[] audioList)
+    {
+        return audioList[Random.Range(0, audioList.Length)];
+    }
     
 }

@@ -31,6 +31,7 @@ public class PauseMenuToggle : MonoBehaviour
                 canvasGroup.interactable = false;
                 canvasGroup.blocksRaycasts = false;
                 canvasGroup.alpha = 0f;
+                FindObjectOfType<CameraControl>().enabled = true;
                 Time.timeScale = 1f;
             }
             else
@@ -38,6 +39,7 @@ public class PauseMenuToggle : MonoBehaviour
                 canvasGroup.interactable = true;
                 canvasGroup.blocksRaycasts = true;
                 canvasGroup.alpha = 1f;
+                FindObjectOfType<CameraControl>().enabled = false;
                 Time.timeScale = 0f;
             }
         }

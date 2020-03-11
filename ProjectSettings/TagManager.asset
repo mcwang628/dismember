@@ -4,8 +4,6 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Pickup
-  - parts
   - SF_Door
   - bosses
   - weapon

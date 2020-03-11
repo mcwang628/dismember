@@ -7,7 +7,6 @@ public class GameController : MonoBehaviour
 {
     public GameObject[] doors;
     public GameObject[] enemies;
-    public int enemiesDefeated;
 
     // Start is called before the first frame update
     void Start()
@@ -18,22 +17,22 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (enemiesDefeated == 1)
+        if (enemies[0].transform.childCount == 0)
         {
             doors[0].GetComponent<Animator>().SetBool("Open", true);
             enemies[1].SetActive(true);
         }
-        if (enemiesDefeated == 2)
+        if (enemies[1].transform.childCount == 0)
         {
             doors[1].GetComponent<Animator>().SetBool("Open", true);
             enemies[2].SetActive(true);
         }
-        if (enemiesDefeated == 3)
+        if (enemies[2].transform.childCount == 0)
         {
             doors[2].GetComponent<Animator>().SetBool("Open", true);
             enemies[3].SetActive(true);
         }
-        if (enemiesDefeated == 4)
+        if (enemies[3].transform.childCount == 0)
         {
             SceneManager.LoadScene("StartScene");
         }
